@@ -20,7 +20,8 @@ var pictureTemplate = document.querySelector("#picture")
   .querySelector(".picture");
 var pictures = document.querySelector(".pictures");
 var bigPicture = document.querySelector(".big-picture");
-var photosNumArray = getNumbersArray(25);
+var uploadFile = document.querySelector("#upload-file");
+
 
 // ФУНКЦИИ //
 
@@ -120,7 +121,63 @@ pictures.appendChild(fragment);
 
 renderBigPicture(postsArray[0]);
 
-document.querySelector(".big-picture").classList.remove("hidden");
+// document.querySelector(".big-picture").classList.remove("hidden");
 
 document.querySelector(".social__comment-count").classList.add("visually-hidden");
-document.querySelector(".comments__loader").classList.add("visually-hidden");
+document.querySelector(".comments-loader").classList.add("visually-hidden");
+
+
+// Module4-task1 //
+
+
+var effectLevelPin = document.querySelector(".effect-level__pin");
+var effectLevelValue = document.querySelector(".effect-level__value");
+var imgUploadPreview = document.querySelector(".img-upload__preview");
+
+var effectNoneInput = document.querySelector("#effect-none");
+var effectChromeInput = document.querySelector("#effect-chrome");
+var effectSepiaInput = document.querySelector("#effect-sepia");
+var effectMarvinInput = document.querySelector("#effect-marvin");
+var effectPhobosInput = document.querySelector("#effect-phobos");
+var effectHeatInput = document.querySelector("#effect-heat");
+
+var effectInputs = document.querySelectorAll(".effects__radio");
+
+
+
+uploadFile.addEventListener("change", (evt) => {
+  var uploadOverlay = document.querySelector(".img-upload__overlay");
+
+  if (!uploadOverlay.classList.contains("hidden")) {
+    uploadFile.value = "";
+  }
+
+  uploadOverlay.classList.toggle("hidden");
+})
+
+if (effectHeatInput.hasAttribute("checked")) {
+  imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + 2 + ")");
+}
+
+effectLevelPin.addEventListener("mouseup", (evt) => {
+  var pinStyle = getComputedStyle(effectLevelPin);
+
+  var valueWithoutPercent = +pinStyle.left.slice(0, -1);
+
+  effectLevelValue.value = valueWithoutPercent;
+
+  if (effectHeatInput.hasAttribute("checked")) {
+    imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + 2 + ")");
+  }
+})
+
+effectHeatInput.addEventListener("focus", (evt) => {
+  var pinStyle = getComputedStyle(effectLevelPin);
+
+  var valueWithoutPercent = +pinStyle.left.slice(0, -1);
+
+  effectLevelValue.value = valueWithoutPercent;
+
+
+})
+
