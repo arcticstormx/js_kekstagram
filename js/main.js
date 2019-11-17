@@ -133,59 +133,77 @@ document.querySelector(".comments-loader").classList.add("visually-hidden");
 var effectLevelPin = document.querySelector(".effect-level__pin");
 var effectLevelValue = document.querySelector(".effect-level__value");
 var imgUploadPreview = document.querySelector(".img-upload__preview");
+var imgUploadPreviewClose = document.querySelector(".img-upload__cancel");
+var uploadOverlay = document.querySelector(".img-upload__overlay");
+
+var effectsList = document.querySelector(".effects__list");
+var effectsLabels = effectsList.querySelectorAll(".effects__label");
+
+var effectCheckedInput = effectsList.querySelector(".effects__radio[checked]");
+var effectCheckedInputValue = effectsList.querySelector(".effects__radio[checked]").value;
 
 var effectNoneInput = document.querySelector("#effect-none");
-var effectDefaultInput = document.querySelector(".effects__radio[checked]");
-var effectDefaultInputValue = document.querySelector(".effects__radio[checked]").value;
-
 var effectChromeInput = document.querySelector("#effect-chrome");
 var effectSepiaInput = document.querySelector("#effect-sepia");
 var effectMarvinInput = document.querySelector("#effect-marvin");
 var effectPhobosInput = document.querySelector("#effect-phobos");
 var effectHeatInput = document.querySelector("#effect-heat");
 
+// УДАЛИТЬ ПОТОМ ЭТУ СТРОКУ
+uploadOverlay.classList.remove("hidden");
 
 uploadFile.addEventListener("change", (evt) => {
-  var uploadOverlay = document.querySelector(".img-upload__overlay");
-
   if (!uploadOverlay.classList.contains("hidden")) {
     uploadFile.value = "";
   }
 
+  uploadOverlay.classList.remove("hidden");
+});
+
+imgUploadPreviewClose.addEventListener("click", (evt) => {
   uploadOverlay.classList.toggle("hidden");
+});
+
+effectsLabels.forEach((elem) => {
+  elem.addEventListener("click", (evt) => {
+    var checkedInput = effectsList.querySelector(".effects__radio[checked]");
+    checkedInput.removeAttribute("checked");
+    evt.currentTarget.setAttribute("checked","");
+  });
 });
 
 
 effectLevelPin.addEventListener("mouseup", (evt) => {
   var effectPinStyle = getComputedStyle(effectLevelPin);
-  var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2);
-  effectLevelValue.value = effectPinCoordValue;
+  var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2) / 432;
+  var effectPinCoordRounded = Math.round(effectPinCoordValue * 100) / 100;
+  effectLevelValue.value = effectPinCoordRounded * 100;
 
-  imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + ((effectLevelValue.value / 100) * 1) + ")");
+  // imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + ((effectLevelValue.value / 100) * 1) + ")");
 
-  // switch (effectDefaultInputValue) {
-  // case "chrome":
-  //   imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + (effectLevelValue.value / 100) * 1 + ")");
-  //   break;
+  switch (effectCheckedInputValue) {
+    case "chrome":
+      imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectPinCoordRounded * 1 + ")");
+      break;
 
-  // case "sepia":
-  //   imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + (effectLevelValue.value / 100) * 1 + ")");
-  //   break;
+    case "sepia":
+      imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectPinCoordRounded * 1 + ")");
+      break;
 
-  // case "marvin":
-  //   imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectLevelValue.value + "%)");
-  //   break;
+    case "marvin":
+      imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectPinCoordRounded * 100 + "%)");
+      break;
 
-  // case "phobos":
-  //   imgUploadPreview.setAttribute("style", "filter: " + "blur(" + (effectLevelValue.value / 100) * 3 + "px)");
-  //   break;
+    case "phobos":
+      imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectPinCoordRounded * 3 + "px)");
+      break;
 
-  // case "heat":
-  //   imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + (effectLevelValue.value / 100) * 3 + ")");
-  //   break;
-  // }
-
+    case "heat":
+      imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + effectPinCoordRounded * 3 + ")");
+      break;
+  }
 });
+
 
 // effectHeatInput.addEventListener("focus", (evt) => {
 //   var pinStyle = getComputedStyle(effectLevelPin);
