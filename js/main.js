@@ -139,6 +139,7 @@ var uploadOverlay = document.querySelector(".img-upload__overlay");
 var effectsList = document.querySelector(".effects__list");
 var effectsLabels = effectsList.querySelectorAll(".effects__label");
 
+var effectsInputs = effectsList.querySelectorAll(".effects__radio");
 var effectCheckedInput = effectsList.querySelector(".effects__radio[checked]");
 var effectCheckedInputValue = effectsList.querySelector(".effects__radio[checked]").value;
 
@@ -166,9 +167,48 @@ imgUploadPreviewClose.addEventListener("click", (evt) => {
 
 effectsLabels.forEach((elem) => {
   elem.addEventListener("click", (evt) => {
-    var checkedInput = effectsList.querySelector(".effects__radio[checked]");
-    checkedInput.removeAttribute("checked");
-    evt.currentTarget.setAttribute("checked","");
+    effectsInputs.forEach((item) => {
+      if (item.hasAttribute("checked")) {
+        item.removeAttribute("checked");
+      }
+    });
+
+    var effectPinStyle = getComputedStyle(effectLevelPin);
+    var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2) / 432;
+    var effectPinCoordRounded = (Math.round(effectPinCoordValue * 100) / 100) * 100;
+    effectLevelValue.value = effectPinCoordRounded;
+
+    switch (evt.currentTarget.getAttribute("for")) {
+      case "effect-none":
+        imgUploadPreview.setAttribute("style", "");
+        break;
+
+      case "effect-chrome":
+        imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectPinCoordRounded + "%)");
+        effectChromeInput.setAttribute("checked","");
+        break;
+
+      case "effect-sepia":
+        imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectPinCoordRounded + "%)");
+        effectSepiaInput.setAttribute("checked","");
+        break;
+
+      case "effect-marvin":
+        imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectPinCoordRounded + "%)");
+        effectMarvinInput.setAttribute("checked","");
+        break;
+
+      case "effect-phobos":
+        imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectPinCoordRounded / 100 * 3 + "px)");
+        effectPhobosInput.setAttribute("checked","");
+        break;
+
+      case "effect-heat":
+        imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + ((effectPinCoordRounded / 100 * 3) + 1) + ")");
+        effectHeatInput.setAttribute("checked","");
+        break;
+    }
+
   });
 });
 
@@ -177,7 +217,7 @@ effectLevelPin.addEventListener("mouseup", (evt) => {
   var effectPinStyle = getComputedStyle(effectLevelPin);
   var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2) / 432;
   var effectPinCoordRounded = Math.round(effectPinCoordValue * 100) / 100;
-  effectLevelValue.value = effectPinCoordRounded * 100;
+  effectLevelValue.value = effectPinCoordRounded;
 
   // imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + ((effectLevelValue.value / 100) * 1) + ")");
 
@@ -203,14 +243,3 @@ effectLevelPin.addEventListener("mouseup", (evt) => {
       break;
   }
 });
-
-
-// effectHeatInput.addEventListener("focus", (evt) => {
-//   var pinStyle = getComputedStyle(effectLevelPin);
-
-//   var valueWithoutPercent = +pinStyle.left.slice(0, -1);
-
-//   effectLevelValue.value = valueWithoutPercent;
-
-// });
-
