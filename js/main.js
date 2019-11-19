@@ -10,6 +10,8 @@ var COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 // ПЕРЕМЕННЫЕ //
 
@@ -129,18 +131,20 @@ document.querySelector(".comments-loader").classList.add("visually-hidden");
 
 // Module4-task1 //
 
+var bigPictureClose = document.querySelector(".big-picture__cancel");
+var picturesArray = document.querySelectorAll(".picture");
 
 var effectLevelPin = document.querySelector(".effect-level__pin");
 var effectLevelValue = document.querySelector(".effect-level__value");
 var imgUploadPreview = document.querySelector(".img-upload__preview");
 var imgUploadPreviewClose = document.querySelector(".img-upload__cancel");
+var imgUploadSubmit = document.querySelector("#upload-submit");
 var uploadOverlay = document.querySelector(".img-upload__overlay");
 
 var effectsList = document.querySelector(".effects__list");
 var effectsLabels = effectsList.querySelectorAll(".effects__label");
 
 var effectsInputs = effectsList.querySelectorAll(".effects__radio");
-var effectCheckedInput = effectsList.querySelector(".effects__radio[checked]");
 var effectCheckedInputValue = effectsList.querySelector(".effects__radio[checked]").value;
 
 var effectNoneInput = document.querySelector("#effect-none");
@@ -150,96 +154,216 @@ var effectMarvinInput = document.querySelector("#effect-marvin");
 var effectPhobosInput = document.querySelector("#effect-phobos");
 var effectHeatInput = document.querySelector("#effect-heat");
 
+var closePreview = () => {
+  bigPicture.classList.add("hidden");
+  document.removeEventListener("keydown", onPreviewEscPress);
+};
+
+var onPreviewEscPress = (evt) => {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePreview();
+  }
+};
+
+var openPreview = () => {
+  bigPicture.classList.remove("hidden");
+  document.addEventListener("keydown", onPreviewEscPress);
+};
+
+var closeUploadOverlay = () => {
+  uploadOverlay.classList.add("hidden");
+  document.removeEventListener("keydown", onUploadOverlayEscPress);
+};
+
+var onUploadOverlayEscPress = (evt) => {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeUploadOverlay();
+  }
+};
+
+var openUploadOverlay = () => {
+  uploadOverlay.classList.remove("hidden");
+  document.addEventListener("keydown", onUploadOverlayEscPress);
+};
+
+var calculatePinValueInPercent = () => {
+  var effectPinStyle = getComputedStyle(effectLevelPin);
+  var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2) / 432;
+  var effectPinCoordRounded = (Math.round(effectPinCoordValue * 100) / 100) * 100;
+  return effectPinCoordRounded;
+};
+
+var onPressPreventSubmit = (evt) => {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    evt.preventDefault();
+  }
+};
+
 // УДАЛИТЬ ПОТОМ ЭТУ СТРОКУ
 uploadOverlay.classList.remove("hidden");
 
+//Добавлеине всем элементам с классом .picture открытие по клику
+picturesArray.forEach( (elem) => {
+  elem.addEventListener("click", (evt) => {
+    openPreview();
+  })
+});
+
+//Закрытие big-picture блока
+bigPictureClose.addEventListener("click", () => {
+  bigPicture.classList.add("hidden");
+  document.removeEventListener("keydown", onPreviewEscPress);
+});
+
+//Открытие фильтров при загрузке изображения
 uploadFile.addEventListener("change", (evt) => {
   if (!uploadOverlay.classList.contains("hidden")) {
     uploadFile.value = "";
   }
-
-  uploadOverlay.classList.remove("hidden");
+  openUploadOverlay();
 });
 
+//Закрытие блока с фильтрами
 imgUploadPreviewClose.addEventListener("click", (evt) => {
-  uploadOverlay.classList.toggle("hidden");
+  closeUploadOverlay();
 });
 
-effectsLabels.forEach((elem) => {
+//Добавление каждому элементу массива лэйблов event listener
+effectsLabels.forEach( (elem) => {
   elem.addEventListener("click", (evt) => {
+    //Удаление checked аттрибута из старого элемента
     effectsInputs.forEach((item) => {
       if (item.hasAttribute("checked")) {
         item.removeAttribute("checked");
       }
     });
 
-    var effectPinStyle = getComputedStyle(effectLevelPin);
-    var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2) / 432;
-    var effectPinCoordRounded = (Math.round(effectPinCoordValue * 100) / 100) * 100;
-    effectLevelValue.value = effectPinCoordRounded;
+    //Рассчёт и передача value на слайдере
+    effectLevelValue.value = calculatePinValueInPercent();
 
+    //Если аттрибут кликнутого лэйбла совпадает с названием одного из фильтров, то
     switch (evt.currentTarget.getAttribute("for")) {
       case "effect-none":
         imgUploadPreview.setAttribute("style", "");
         break;
 
       case "effect-chrome":
-        imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectPinCoordRounded + "%)");
+        imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectLevelValue.value + "%)");
         effectChromeInput.setAttribute("checked","");
         break;
 
       case "effect-sepia":
-        imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectPinCoordRounded + "%)");
+        imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectLevelValue.value + "%)");
         effectSepiaInput.setAttribute("checked","");
         break;
 
       case "effect-marvin":
-        imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectPinCoordRounded + "%)");
+        imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectLevelValue.value + "%)");
         effectMarvinInput.setAttribute("checked","");
         break;
 
       case "effect-phobos":
-        imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectPinCoordRounded / 100 * 3 + "px)");
+        imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectLevelValue.value / 100 * 3 + "px)");
         effectPhobosInput.setAttribute("checked","");
         break;
 
       case "effect-heat":
-        imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + ((effectPinCoordRounded / 100 * 3) + 1) + ")");
+        imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + ((effectLevelValue.value / 100 * 3) + 1) + ")");
         effectHeatInput.setAttribute("checked","");
         break;
+    }
+  });
+});
+
+
+effectsLabels.forEach( (elem) => {
+  elem.addEventListener("keydown", (evt) => {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      //Удаление checked аттрибута из старого элемента
+      effectsInputs.forEach((item) => {
+        if (item.hasAttribute("checked")) {
+          item.removeAttribute("checked");
+        }
+      });
+
+      //Рассчёт и передача value на слайдере
+      effectLevelValue.value = calculatePinValueInPercent();
+
+      //Если аттрибут кликнутого лэйбла совпадает с названием одного из фильтров, то
+      switch (evt.currentTarget.getAttribute("for")) {
+        case "effect-none":
+          imgUploadPreview.setAttribute("style", "");
+          break;
+
+        case "effect-chrome":
+          imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectLevelValue.value + "%)");
+          effectChromeInput.setAttribute("checked","");
+          break;
+
+        case "effect-sepia":
+          imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectLevelValue.value + "%)");
+          effectSepiaInput.setAttribute("checked","");
+          break;
+
+        case "effect-marvin":
+          imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectLevelValue.value + "%)");
+          effectMarvinInput.setAttribute("checked","");
+          break;
+
+        case "effect-phobos":
+          imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectLevelValue.value / 100 * 3 + "px)");
+          effectPhobosInput.setAttribute("checked","");
+          break;
+
+        case "effect-heat":
+          imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + ((effectLevelValue.value / 100 * 3) + 1) + ")");
+          effectHeatInput.setAttribute("checked","");
+          break;
+      }
     }
 
   });
 });
 
-
+//Добавление event listener для бегунка
 effectLevelPin.addEventListener("mouseup", (evt) => {
   var effectPinStyle = getComputedStyle(effectLevelPin);
   var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2) / 432;
-  var effectPinCoordRounded = Math.round(effectPinCoordValue * 100) / 100;
+  var effectPinCoordRounded = (Math.round(effectPinCoordValue * 100) / 100) * 100;
   effectLevelValue.value = effectPinCoordRounded;
+
+  var effectCheckedInput = effectsList.querySelector(".effects__radio[checked]");
 
   // imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + ((effectLevelValue.value / 100) * 1) + ")");
 
-  switch (effectCheckedInputValue) {
+  switch (effectCheckedInput.value) {
+    case "none":
+        imgUploadPreview.setAttribute("style", "");
+        break;
+
     case "chrome":
-      imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectPinCoordRounded * 1 + ")");
+      imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectPinCoordRounded + "%)");
+      effectChromeInput.setAttribute("checked","");
       break;
 
     case "sepia":
-      imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectPinCoordRounded * 1 + ")");
+      imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectPinCoordRounded + "%)");
+      effectSepiaInput.setAttribute("checked","");
       break;
 
     case "marvin":
-      imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectPinCoordRounded * 100 + "%)");
+      imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectPinCoordRounded + "%)");
+      effectMarvinInput.setAttribute("checked","");
       break;
 
     case "phobos":
-      imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectPinCoordRounded * 3 + "px)");
+      imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectPinCoordRounded / 100 * 3 + "px)");
+      effectPhobosInput.setAttribute("checked","");
       break;
 
     case "heat":
-      imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + effectPinCoordRounded * 3 + ")");
+      imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + ((effectPinCoordRounded / 100 * 3) + 1) + ")");
+      effectHeatInput.setAttribute("checked","");
       break;
   }
 });
