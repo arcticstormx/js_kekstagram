@@ -372,11 +372,24 @@ effectLevelPin.addEventListener("mouseup", (evt) => {
 
 var textHashtagsInput = document.querySelector(".text__hashtags");
 
+textHashtagsInput.addEventListener("focus", (evt) => {
+  document.removeEventListener("keydown", onPreviewEscPress);
+});
+
+textHashtagsInput.addEventListener("onblur", (evt) => {
+  document.addEventListener("keydown", onPreviewEscPress);
+});
+
 textHashtagsInput.addEventListener("input", (evt) => {
   var target = evt.target;
   var inputArray = target.value.split(" ");
 
-  targetArray.forEach( (item) => {
+
+  if (inputArray.length > 5) {
+    target.setCustomValidity("Можно использовать не больше 5 хэш-тегов");
+  }
+
+  inputArray.forEach( (item) => {
     var itemSplit = item.split("");
     if (itemSplit.length > 20) {
       target.setCustomValidity("Хэш-тег не может быть длиннее 20 символов");
@@ -384,6 +397,9 @@ textHashtagsInput.addEventListener("input", (evt) => {
       target.setCustomValidity("Каждый хэш-тег должен начинаться с решётки \"#\"");
     } else if (itemSplit.length == 1 && itemSplit[0] == "#") {
       target.setCustomValidity("Хэш-тег не может состоять только из символа \"#\"");
+    } else if (itemSplit) {}
+    for (var i = 0; i < itemSplit.length; i++) {
+
     }
   })
 });
