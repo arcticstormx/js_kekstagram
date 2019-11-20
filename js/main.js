@@ -334,8 +334,6 @@ effectLevelPin.addEventListener("mouseup", (evt) => {
 
   var effectCheckedInput = effectsList.querySelector(".effects__radio[checked]");
 
-  // imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + ((effectLevelValue.value / 100) * 1) + ")");
-
   switch (effectCheckedInput.value) {
     case "none":
         imgUploadPreview.setAttribute("style", "");
@@ -367,3 +365,46 @@ effectLevelPin.addEventListener("mouseup", (evt) => {
       break;
   }
 });
+
+
+//  Module4-task2  //
+
+
+var textHashtagsInput = document.querySelector(".text__hashtags");
+
+textHashtagsInput.addEventListener("input", (evt) => {
+  var target = evt.target;
+  var inputArray = target.value.split(" ");
+
+  targetArray.forEach( (item) => {
+    var itemSplit = item.split("");
+    if (itemSplit.length > 20) {
+      target.setCustomValidity("Хэш-тег не может быть длиннее 20 символов");
+    } else if (itemSplit[0] != "#") {
+      target.setCustomValidity("Каждый хэш-тег должен начинаться с решётки \"#\"");
+    } else if (itemSplit.length == 1 && itemSplit[0] == "#") {
+      target.setCustomValidity("Хэш-тег не может состоять только из символа \"#\"");
+    }
+  })
+});
+
+// userNameInput.addEventListener('invalid', function (evt) {
+//   if (userNameInput.validity.tooShort) {
+//     userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+//   } else if (userNameInput.validity.tooLong) {
+//     userNameInput.setCustomValidity('Имя не должно превышать 25-ти символов');
+//   } else if (userNameInput.validity.valueMissing) {
+//     userNameInput.setCustomValidity('Обязательное поле');
+//   } else {
+//     userNameInput.setCustomValidity('');
+//   }
+// });
+
+// userNameInput.addEventListener('input', function (evt) {
+//   var target = evt.target;
+//   if (target.value.length < 2) {
+//     target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+//   } else {
+//     target.setCustomValidity('');
+//   }
+// });
