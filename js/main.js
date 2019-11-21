@@ -334,8 +334,6 @@ effectLevelPin.addEventListener("mouseup", (evt) => {
 
   var effectCheckedInput = effectsList.querySelector(".effects__radio[checked]");
 
-  // imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + ((effectLevelValue.value / 100) * 1) + ")");
-
   switch (effectCheckedInput.value) {
     case "none":
         imgUploadPreview.setAttribute("style", "");
@@ -366,4 +364,42 @@ effectLevelPin.addEventListener("mouseup", (evt) => {
       effectHeatInput.setAttribute("checked","");
       break;
   }
+});
+
+
+//  Module4-task2  //
+
+
+var textHashtagsInput = document.querySelector(".text__hashtags");
+
+textHashtagsInput.addEventListener("focus", (evt) => {
+  document.removeEventListener("keydown", onPreviewEscPress);
+});
+
+textHashtagsInput.addEventListener("blur", (evt) => {
+  document.addEventListener("keydown", onPreviewEscPress);
+});
+
+textHashtagsInput.addEventListener("blur", (evt) => {
+  var target = evt.target;
+  var inputArray = textHashtagsInput.value.split(" ");
+
+  inputArray = inputArray.filter(elem => elem.length > 0);
+
+  if (inputArray.length > 5) {
+    textHashtagsInput.setCustomValidity("Можно использовать не больше 5 хэш-тегов");
+  }
+
+  inputArray.forEach( (item) => {
+    var itemSplit = item.split("");
+    if (itemSplit.length > 20) {
+      textHashtagsInput.setCustomValidity("Хэш-тег не может быть длиннее 20 символов");
+    } else if (itemSplit[0] != "#") {
+      textHashtagsInput.setCustomValidity("Каждый хэш-тег должен начинаться с решётки \"#\"");
+    } else if (itemSplit.length === 1 && itemSplit[0] == "#") {
+      textHashtagsInput.setCustomValidity("Хэш-тег не может состоять только из символа \"#\"");
+    } else if (itemSplit[0] === "#" && itemSplit.includes('#', 1)) {
+      textHashtagsInput.setCustomValidity("Хэш-теги должны быть разделены пробелами");
+    }
+  })
 });
