@@ -376,51 +376,30 @@ textHashtagsInput.addEventListener("focus", (evt) => {
   document.removeEventListener("keydown", onPreviewEscPress);
 });
 
-textHashtagsInput.addEventListener("onblur", (evt) => {
+textHashtagsInput.addEventListener("blur", (evt) => {
   document.addEventListener("keydown", onPreviewEscPress);
 });
 
-textHashtagsInput.addEventListener("input", (evt) => {
+textHashtagsInput.addEventListener("blur", (evt) => {
   var target = evt.target;
-  var inputArray = target.value.split(" ");
+  var inputArray = textHashtagsInput.value.split(" ");
 
+  inputArray = inputArray.filter(elem => elem.length > 0);
 
   if (inputArray.length > 5) {
-    target.setCustomValidity("Можно использовать не больше 5 хэш-тегов");
+    textHashtagsInput.setCustomValidity("Можно использовать не больше 5 хэш-тегов");
   }
 
   inputArray.forEach( (item) => {
     var itemSplit = item.split("");
     if (itemSplit.length > 20) {
-      target.setCustomValidity("Хэш-тег не может быть длиннее 20 символов");
+      textHashtagsInput.setCustomValidity("Хэш-тег не может быть длиннее 20 символов");
     } else if (itemSplit[0] != "#") {
-      target.setCustomValidity("Каждый хэш-тег должен начинаться с решётки \"#\"");
-    } else if (itemSplit.length == 1 && itemSplit[0] == "#") {
-      target.setCustomValidity("Хэш-тег не может состоять только из символа \"#\"");
-    } else if (itemSplit) {}
-    for (var i = 0; i < itemSplit.length; i++) {
-
+      textHashtagsInput.setCustomValidity("Каждый хэш-тег должен начинаться с решётки \"#\"");
+    } else if (itemSplit.length === 1 && itemSplit[0] == "#") {
+      textHashtagsInput.setCustomValidity("Хэш-тег не может состоять только из символа \"#\"");
+    } else if (itemSplit[0] === "#" && itemSplit.includes('#', 1)) {
+      textHashtagsInput.setCustomValidity("Хэш-теги должны быть разделены пробелами");
     }
   })
 });
-
-// userNameInput.addEventListener('invalid', function (evt) {
-//   if (userNameInput.validity.tooShort) {
-//     userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-//   } else if (userNameInput.validity.tooLong) {
-//     userNameInput.setCustomValidity('Имя не должно превышать 25-ти символов');
-//   } else if (userNameInput.validity.valueMissing) {
-//     userNameInput.setCustomValidity('Обязательное поле');
-//   } else {
-//     userNameInput.setCustomValidity('');
-//   }
-// });
-
-// userNameInput.addEventListener('input', function (evt) {
-//   var target = evt.target;
-//   if (target.value.length < 2) {
-//     target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-//   } else {
-//     target.setCustomValidity('');
-//   }
-// });
