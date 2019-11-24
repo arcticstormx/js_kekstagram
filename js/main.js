@@ -325,52 +325,8 @@ effectsLabels.forEach( (elem) => {
   });
 });
 
-//Добавление event listener для бегунка
-effectLevelPin.addEventListener("mouseup", (evt) => {
-  evt.preventDefault();
-  var effectPinStyle = getComputedStyle(effectLevelPin);
-  var effectPinCoordValue = +effectPinStyle.getPropertyValue("left").slice(0, -2) / 432;
-  var effectPinCoordRounded = (Math.round(effectPinCoordValue * 100) / 100) * 100;
-  effectLevelValue.value = effectPinCoordRounded;
-
-  var effectCheckedInput = effectsList.querySelector(".effects__radio[checked]");
-
-  switch (effectCheckedInput.value) {
-    case "none":
-        imgUploadPreview.setAttribute("style", "");
-        break;
-
-    case "chrome":
-      imgUploadPreview.setAttribute("style", "filter: " + "grayscale(" + effectPinCoordRounded + "%)");
-      effectChromeInput.setAttribute("checked","");
-      break;
-
-    case "sepia":
-      imgUploadPreview.setAttribute("style", "filter: " + "sepia(" + effectPinCoordRounded + "%)");
-      effectSepiaInput.setAttribute("checked","");
-      break;
-
-    case "marvin":
-      imgUploadPreview.setAttribute("style", "filter: " + "invert(" + effectPinCoordRounded + "%)");
-      effectMarvinInput.setAttribute("checked","");
-      break;
-
-    case "phobos":
-      imgUploadPreview.setAttribute("style", "filter: " + "blur(" + effectPinCoordRounded / 100 * 3 + "px)");
-      effectPhobosInput.setAttribute("checked","");
-      break;
-
-    case "heat":
-      imgUploadPreview.setAttribute("style", "filter: " + "brightness(" + ((effectPinCoordRounded / 100 * 3) + 1) + ")");
-      effectHeatInput.setAttribute("checked","");
-      break;
-  }
-});
-
-
 //  Module4-task2  //
 
-var effectLevelDepth = document.querySelector(".effect-level__depth");
 var textHashtagsInput = document.querySelector(".text__hashtags");
 
 textHashtagsInput.addEventListener("focus", (evt) => {
@@ -406,14 +362,13 @@ textHashtagsInput.addEventListener("blur", (evt) => {
 });
 
 //  Module5-task1 //
-
+var effectLevelDepth = document.querySelector(".effect-level__depth");
 
 effectLevelPin.addEventListener("mousedown", (evt) => {
   evt.preventDefault();
 
   var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
+    x: evt.clientX
   };
 
   var onMouseMove = function (moveEvt) {
@@ -421,15 +376,12 @@ effectLevelPin.addEventListener("mousedown", (evt) => {
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
-        // y: startCoords.y - moveEvt.clientY
       };
 
       startCoords = {
         x: moveEvt.clientX,
-        // y: moveEvt.clientY
       };
 
-      // setup.style.top = (setup.offsetTop - shift.y) + 'px';
       if ((effectLevelPin.offsetLeft - shift.x >= 0) && (effectLevelPin.offsetLeft - shift.x <= 453)) {
         effectLevelPin.style.left = (effectLevelPin.offsetLeft - shift.x) + 'px';
         effectLevelDepth.style.width = effectLevelPin.style.left;
