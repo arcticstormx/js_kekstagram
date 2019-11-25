@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 
 // КОНСТАНТЫ //
 var COMMENTS = [
@@ -426,6 +426,8 @@ effectLevelPin.addEventListener("mousedown", (evt) => {
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
+
+      effectLevelValue.value = calculatePinValueInPercent();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
