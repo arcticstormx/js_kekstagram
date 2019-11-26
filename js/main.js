@@ -123,8 +123,6 @@ pictures.appendChild(fragment);
 
 renderBigPicture(postsArray[0]);
 
-// document.querySelector(".big-picture").classList.remove("hidden");
-
 document.querySelector(".social__comment-count").classList.add("visually-hidden");
 document.querySelector(".comments-loader").classList.add("visually-hidden");
 
@@ -198,9 +196,6 @@ var onPressPreventSubmit = (evt) => {
     evt.preventDefault();
   }
 };
-
-// УДАЛИТЬ ПОТОМ ЭТУ СТРОКУ
-uploadOverlay.classList.remove("hidden");
 
 //Добавлеине всем элементам с классом .picture открытие по клику
 picturesArray.forEach( (elem) => {
