@@ -20,7 +20,8 @@
 
   window.data = {
     getRandomElement: getRandomElement,
-    getRandomNumber: getRandomNumber
+    getRandomNumber: getRandomNumber,
+    ESC_KEYCODE: ESC_KEYCODE,
+    ENTER_KEYCODE: ENTER_KEYCODE
     }
-  }
 })();

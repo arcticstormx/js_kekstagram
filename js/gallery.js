@@ -29,7 +29,7 @@
   }
 
   function createPost () {
-    var post = {};
+    let post = {};
     post.url = null;
     post.likes = window.data.getRandomNumber(15, 200);
     post.comments = [];
@@ -40,7 +40,7 @@
   }
 
   function renderPost (post) {
-    var renderedPost = pictureTemplate.cloneNode(true);
+    const renderedPost = pictureTemplate.cloneNode(true);
 
     renderedPost.querySelector(".picture__img").setAttribute('src', post.url);
     renderedPost.querySelector(".picture__likes").textContent = post.likes;
@@ -50,7 +50,7 @@
   }
 
   function renderSocialComment (comment) {
-    var renderedComment = bigPicture.querySelector(".social__comment").cloneNode(true);
+    const renderedComment = bigPicture.querySelector(".social__comment").cloneNode(true);
 
     renderedComment.querySelector(".social__picture").setAttribute("src", "img/avatar-" + window.data.getRandomNumber(1, 6) + ".svg");
     renderedComment.querySelector(".social__text").textContent = comment;
@@ -59,15 +59,15 @@
   }
 
   function renderBigPicture (post) {
-    var socialCommentsFragment = document.createDocumentFragment();
+    const socialCommentsFragment = document.createDocumentFragment();
 
     bigPicture.querySelector(".big-picture__img").querySelector("img").setAttribute('src', post.url);
     bigPicture.querySelector(".likes-count").textContent = post.likes;
     bigPicture.querySelector(".comments-count").textContent = post.comments.length;
 
     // Прикрепляем все комментарии к фрагменту //
-    for (var i = 0; i < post.comments.length; i++) {
-      var newComment = renderSocialComment(post.comments[i]);
+    for (let i = 0; i < post.comments.length; i++) {
+      const newComment = renderSocialComment(post.comments[i]);
       socialCommentsFragment.appendChild(newComment);
     }
 
@@ -77,6 +77,22 @@
     // Добавим комментарии, которые мы сгенерировали //
     bigPicture.querySelector(".social__comments").appendChild(socialCommentsFragment);
   }
+
+  const closePreview = () => {
+    bigPicture.classList.add("hidden");
+    document.removeEventListener("keydown", onPreviewEscPress);
+  };
+
+  const onPreviewEscPress = (evt) => {
+    if (evt.keyCode === window.data.ESC_KEYCODE) {
+      closePreview();
+    }
+  };
+
+  const openPreview = () => {
+    bigPicture.classList.remove("hidden");
+    document.addEventListener("keydown", onPreviewEscPress);
+  };
 
   for (let i = 0; i < 25; i++) {
     postsArray.push(createPost());
