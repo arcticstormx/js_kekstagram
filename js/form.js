@@ -22,6 +22,8 @@
   const effectPhobosInput = document.querySelector("#effect-phobos");
   const effectHeatInput = document.querySelector("#effect-heat");
 
+  const form = document.querySelector(".img-upload__form");
+
   const closeUploadOverlay = () => {
     uploadOverlay.classList.add("hidden");
     document.removeEventListener("keydown", onUploadOverlayEscPress);
@@ -231,6 +233,17 @@
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   });
+
+  form.addEventListener('submit', function (evt) {
+    window.back.uploadData(new FormData(form),
+      function (response) {
+        closeUploadOverlay();
+        console.log("Данные отправлены!")
+      },
+      window.back.errorHandler
+    );
+    evt.preventDefault();
+  }, false);
 
 })();
 

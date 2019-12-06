@@ -2,14 +2,7 @@
 
 (function () {
 
-  const COMMENTS = [
-    'Всё отлично!',
-    'В целом всё неплохо. Но не всё.',
-    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-  ];
+
   const postsArray = [];
   const pictureTemplate = document.querySelector("#picture")
     .content
@@ -17,8 +10,6 @@
   const pictures = document.querySelector(".pictures");
   const picturesArray = document.querySelectorAll(".picture");
   const bigPicture = document.querySelector(".big-picture");
-
-  let fragment = document.createDocumentFragment();
 
   function createComment () {
     var comment = window.data.getRandomElement(COMMENTS);
@@ -44,7 +35,7 @@
 
     renderedPost.querySelector(".picture__img").setAttribute('src', post.url);
     renderedPost.querySelector(".picture__likes").textContent = post.likes;
-    renderedPost.querySelector(".picture__comments").textContent = post.comments;
+    renderedPost.querySelector(".picture__comments").textContent = post.comments.length;
 
     return renderedPost;
   }
@@ -94,18 +85,29 @@
     document.addEventListener("keydown", onPreviewEscPress);
   };
 
-  for (let i = 0; i < 25; i++) {
-    postsArray.push(createPost());
-    postsArray[i].url = "photos/" + (i + 1) + ".jpg";
-  }
+  // for (let i = 0; i < 25; i++) {
+  //   postsArray.push(createPost());
+  //   postsArray[i].url = "photos/" + (i + 1) + ".jpg";
+  // }
 
-  for (let i = 0; i < postsArray.length; i++) {
-    fragment.appendChild(renderPost(postsArray[i]));
-  }
+  // for (let i = 0; i < postsArray.length; i++) {
+  //   fragment.appendChild(renderPost(postsArray[i]));
+  // }
 
-  pictures.appendChild(fragment);
+  // pictures.appendChild(fragment);
 
-  renderBigPicture(postsArray[0]);
+  // renderBigPicture(postsArray[0]);
+
+  window.back.downloadData(function (posts) {
+    let fragment = document.createDocumentFragment();
+    for (let i = 0; i < posts.length; i++) {
+      fragment.appendChild(renderPost(posts[i]));
+    }
+
+    pictures.appendChild(fragment);
+
+    renderBigPicture(posts[0]);
+  });
 
   document.querySelector(".social__comment-count").classList.add("visually-hidden");
   document.querySelector(".comments-loader").classList.add("visually-hidden");
