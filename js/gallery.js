@@ -85,20 +85,7 @@
     document.addEventListener("keydown", onPreviewEscPress);
   };
 
-  // for (let i = 0; i < 25; i++) {
-  //   postsArray.push(createPost());
-  //   postsArray[i].url = "photos/" + (i + 1) + ".jpg";
-  // }
-
-  // for (let i = 0; i < postsArray.length; i++) {
-  //   fragment.appendChild(renderPost(postsArray[i]));
-  // }
-
-  // pictures.appendChild(fragment);
-
-  // renderBigPicture(postsArray[0]);
-
-  window.back.downloadData(function (posts) {
+  let renderPosts = (posts) => {
     let fragment = document.createDocumentFragment();
     for (let i = 0; i < posts.length; i++) {
       fragment.appendChild(renderPost(posts[i]));
@@ -107,7 +94,13 @@
     pictures.appendChild(fragment);
 
     renderBigPicture(posts[0]);
-  });
+
+    // После отрисовки показать вкладки на странице
+    const imgFilters = document.querySelector(".img-filters");
+    imgFilters.classList.remove("img-filters--inactive");
+  }
+
+  window.back.downloadData(renderPosts, window.back.errorHandler);
 
   document.querySelector(".social__comment-count").classList.add("visually-hidden");
   document.querySelector(".comments-loader").classList.add("visually-hidden");

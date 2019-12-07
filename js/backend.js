@@ -1,7 +1,7 @@
 'use strict';
 
 (function(){
-  let url = {
+  let Url = {
     POST: 'https://js.dump.academy/kekstagram',
     GET: 'https://js.dump.academy/kekstagram/data'
   };
@@ -20,7 +20,7 @@
       console.log(xhr);
     });
     xhr.addEventListener('error', function () {
-      // onError('Произошла ошибка соединения');
+      onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
@@ -29,7 +29,7 @@
     xhr.timeout = 10000;
 
     xhr.open('GET', url.GET);
-    xhr.send()
+    xhr.send();
   };
 
   let uploadData = (data, onLoad, onError) => {
