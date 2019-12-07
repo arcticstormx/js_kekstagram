@@ -28,7 +28,7 @@
 
     xhr.timeout = 10000;
 
-    xhr.open('GET', url.GET);
+    xhr.open('GET', Url.GET);
     xhr.send();
   };
 
@@ -52,7 +52,7 @@
 
     xhr.timeout = 10000;
 
-    xhr.open('POST', url.POST);
+    xhr.open('POST', Url.POST);
     xhr.send(data);
   };
 

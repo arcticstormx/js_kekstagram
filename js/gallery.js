@@ -3,7 +3,7 @@
 (function () {
 
 
-  const postsArray = [];
+  let postsArray = [];
   const pictureTemplate = document.querySelector("#picture")
     .content
     .querySelector(".picture");
@@ -36,6 +36,7 @@
     renderedPost.querySelector(".picture__img").setAttribute('src', post.url);
     renderedPost.querySelector(".picture__likes").textContent = post.likes;
     renderedPost.querySelector(".picture__comments").textContent = post.comments.length;
+    // renderedPost.querySelector(".picture__info").textContent = post.description;
 
     return renderedPost;
   }
@@ -92,23 +93,70 @@
     }
 
     pictures.appendChild(fragment);
-
     renderBigPicture(posts[0]);
+  }
 
-    // После отрисовки показать вкладки на странице
+  let clearPosts = () => {
+    pictures.innerHTML = "";
+  }
+
+  // Добавим локальный successHandler, чтобы сохранить загруженный массив
+  // в исходном состоянии
+  let postsArrayCopy = [];
+
+  let successHandler = (data) => {
+    postsArray = data;
+    renderPosts(postsArray);
+    // Делаем копию оригинального массива
+    postsArrayCopy = postsArray.slice();
+
+    // После загрузки данных показать вкладки на странице
     const imgFilters = document.querySelector(".img-filters");
     imgFilters.classList.remove("img-filters--inactive");
   }
 
-  window.back.downloadData(renderPosts, window.back.errorHandler);
+  // Загрузка данных
+  window.back.downloadData(successHandler, window.back.errorHandler);
 
   document.querySelector(".social__comment-count").classList.add("visually-hidden");
-  document.querySelector(".comments-loader").classList.add("visually-hidden");
+  // document.querySelector(".comments-loader").classList.add("visually-hidden");
 
-  //Добавлеине всем элементам с классом .picture открытие по клику
+  // Добавление всем элементам с классом .picture открытие по клику
   picturesArray.forEach( (elem) => {
     elem.addEventListener("click", (evt) => {
       openPreview();
     })
   });
+
+  // module7-task1
+  // Добавим переключение состояния кнопкам сортировки и
+  // повесим на них события по сортировке и рендеру массива фотографий
+  const imgFiltersBtns = document.querySelectorAll(".img-filters__button");
+  const imgFilterPopular = document.querySelector("#filter-popular");
+  const imgFilterNew = document.querySelector("#filter-new");
+  const imgFilterDiscussed = document.querySelector("#filter-discussed");
+
+  // imgFiltersBtns.forEach( (elem) => {
+  //   elem.addEventListener("click", (evt) => {
+  //     if (evt.target.classList.contains("img-filters__button--active")) return;
+  //     imgFiltersBtns.forEach( (el) => {
+  //       el.classList.remove("img-filters__button--active");
+  //     })
+  //     evt.target.classList.add("img-filters__button--active");
+  //     switch (evt.target.id) {
+  //       case "filter-popular":
+  //         postsArrayCopy.sort((left, right) => {
+  //           return right.comments.length - left.comments.length;
+  //        });
+  //         break;
+  //       case "filter-new":
+  //         postsArrayCopy
+
+  //     }
+  //   })
+  // });
+
+  //Сортируем массив
+
+
 })();
