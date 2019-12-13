@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 (function () {
   const effectLevelPin = document.querySelector(".effect-level__pin");
@@ -21,6 +21,11 @@
   const effectMarvinInput = document.querySelector("#effect-marvin");
   const effectPhobosInput = document.querySelector("#effect-phobos");
   const effectHeatInput = document.querySelector("#effect-heat");
+
+  const form = document.querySelector(".img-upload__form");
+
+  const FILE_TYPES = ["gif", "jpg", "jpeg", "png"];
+  let previewImg = imgUploadPreview.querySelector("img");
 
   const closeUploadOverlay = () => {
     uploadOverlay.classList.add("hidden");
@@ -51,13 +56,32 @@
     return effectPinValue;
   };
 
-  //Открытие фильтров при загрузке изображения
+
+  //Открытие фильтров при изменении загрузчика изображения
   uploadFile.addEventListener("change", (evt) => {
     if (!uploadOverlay.classList.contains("hidden")) {
       uploadFile.value = "";
     }
-    openUploadOverlay();
+    const file = uploadFile.files[0];
+    const fileName = file.name.toLowerCase();
+
+    const matches = FILE_TYPES.some( (it) => {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      const reader = new FileReader();
+
+      reader.addEventListener("load", () => {
+        previewImg.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+      previewImg.setAttribute("style", "width: 100%");
+      openUploadOverlay();
+    }
   });
+
   //Закрытие блока с фильтрами
   imgUploadPreviewClose.addEventListener("click", (evt) => {
     closeUploadOverlay();
@@ -150,7 +174,7 @@
         textHashtagsInput.setCustomValidity("Каждый хэш-тег должен начинаться с решётки \"#\"");
       } else if (itemSplit.length === 1 && itemSplit[0] == "#") {
         textHashtagsInput.setCustomValidity("Хэш-тег не может состоять только из символа \"#\"");
-      } else if (itemSplit[0] === "#" && itemSplit.includes('#', 1)) {
+      } else if (itemSplit[0] === "#" && itemSplit.includes("#", 1)) {
         textHashtagsInput.setCustomValidity("Хэш-теги должны быть разделены пробелами");
       }
     })
@@ -180,7 +204,7 @@
         };
 
         if ((effectLevelPin.offsetLeft - shift.x >= 0) && (effectLevelPin.offsetLeft - shift.x <= 453)) {
-          effectLevelPin.style.left = (effectLevelPin.offsetLeft - shift.x) + 'px';
+          effectLevelPin.style.left = (effectLevelPin.offsetLeft - shift.x) + "px";
           effectLevelDepth.style.width = effectLevelPin.style.left;
 
           effectLevelValue.value = calculatePinValueInPercent();
@@ -224,13 +248,52 @@
       const onMouseUp = function (upEvt) {
         upEvt.preventDefault();
 
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
       };
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   });
 
+  form.addEventListener("submit", function (evt) {
+    window.back.uploadData(new FormData(form),
+      function (response) {
+        closeUploadOverlay();
+        console.log("Данные отправлены!")
+      },
+      window.back.errorHandler
+    );
+    evt.preventDefault();
+  }, false);
+
+  // Изменение размера изображение
+
+  const smallerBtn = document.querySelector(".scale__control--smaller");
+  const biggerBtn = document.querySelector(".scale__control--bigger");
+  const imgScale = document.querySelector(".scale__control--value");
+  let sizeValue = imgScale.value.slice(0, -1);
+
+  smallerBtn.addEventListener("click", (evt) => {
+    if (!sizeValue) return;
+    console.log("до", sizeValue);
+    previewImg.setAttribute("style", "height: auto; width: " + (sizeValue - 5) + "%");
+    console.log("после", sizeValue);
+    sizeValue = (previewImg.width / 600) * 100;
+    imgScale.value = Math.round(sizeValue) + "%";
+  });
+
+  biggerBtn.addEventListener("click", (evt) => {
+    if (sizeValue >= 100) return;
+    console.log("до", sizeValue);
+    previewImg.setAttribute("style", "height: auto; width: " + (sizeValue + 5) + "%");
+    console.log("после", sizeValue);
+    sizeValue = (previewImg.width / 600) * 100;
+    imgScale.value = Math.round(sizeValue) + "%";
+  });
+  //
+  //
+  // Удали потом
+  openUploadOverlay();
 })();
 
