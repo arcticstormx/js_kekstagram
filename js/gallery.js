@@ -2,11 +2,6 @@
 
 (function () {
 
-  // Возможно реализовать:
-  //
-  // 2. Поиск внутри postsArray по совпадению с src="photo..." кликнутого фото (возможно создать мапу или словарь)
-  // 3. Устранить дребезг
-
   let postsArray = [];
   let postsArrayCopy = [];
 
@@ -79,10 +74,6 @@
     const loader = bigPicture.querySelector(".comments-loader");
     // Покажем загрузчик, если он скрыт
     if (loader.classList.contains("visually-hidden")) loader.classList.remove("visually-hidden");
-
-    // 1. Найти и задать правильно число изначально открытых комментариев
-    // 2. Обновить число комментариев после нажатия на кнопку
-    // 3. Правильно задать число, если при последнем нажатии было меньше 5 комментариев
 
     loader.addEventListener( "click", (evt) => {
       const commentCount = bigPicture.querySelector(".social__comment-count");
@@ -243,13 +234,5 @@
 
   // Загрузка данных
   window.back.downloadData(successHandler, window.back.errorHandler);
-
-  // module7-task1
-  // Добавим переключение состояния кнопкам сортировки и
-  // повесим на них события по сортировке и рендеру массива фотографий
-
-
-  //Сортируем массив
-
 
 })();
