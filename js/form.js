@@ -148,13 +148,13 @@
   //Фальтры для хэштегов
   const textHashtagsInput = document.querySelector(".text__hashtags");
 
-  textHashtagsInput.addEventListener("focus", (evt) => {
-    document.removeEventListener("keydown", onPreviewEscPress);
-  });
+  // textHashtagsInput.addEventListener("focus", (evt) => {
+  //   document.removeEventListener("keydown", onPreviewEscPress);
+  // });
 
-  textHashtagsInput.addEventListener("blur", (evt) => {
-    document.addEventListener("keydown", onPreviewEscPress);
-  });
+  // textHashtagsInput.addEventListener("blur", (evt) => {
+  //   document.addEventListener("keydown", onPreviewEscPress);
+  // });
 
   textHashtagsInput.addEventListener("blur", (evt) => {
     var target = evt.target;
@@ -262,7 +262,6 @@
         closeUploadOverlay();
         console.log("Данные отправлены!")
       },
-      window.back.errorHandler
     );
     evt.preventDefault();
   }, false);
@@ -291,9 +290,5 @@
     sizeValue = (previewImg.width / 600) * 100;
     imgScale.value = Math.round(sizeValue) + "%";
   });
-  //
-  //
-  // Удали потом
-  openUploadOverlay();
 })();
 

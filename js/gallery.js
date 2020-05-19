@@ -233,6 +233,7 @@
   })
 
   // Загрузка данных
-  window.back.downloadData(successHandler, window.back.errorHandler);
+  // Github блокирует отправку формы
+  // window.back.downloadData(successHandler, window.back.errorHandler);
 
 })();
